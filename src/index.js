@@ -1,3 +1,4 @@
+import Card from './Card.js';
 import Game from './Game.js';
 import Creature from './Card.js';
 import TaskQueue from './TaskQueue.js';
@@ -173,19 +174,31 @@ class Lad extends Dog{
         let count = this.getInGameCount();
         return count * (count + 1) / 2;
     }
+
 }
 
-
+class PseudoDuck extends Dog{
+    constructor(name="Псевдоутка", power = 3) {
+        super(name, power);
+    }
+    quacks(){
+        console.log('quack');
+    }
+    swims(){
+        console.log('float: both;');
+    }
+}
+// Колода Шерифа, нижнего игрока.
 const seriffStartDeck = [
     new Duck(),
     new Duck(),
     new Duck(),
-    new Rogue(),
 ];
+
+// Колода Бандита, верхнего игрока.
 const banditStartDeck = [
-    new Dog(),
-    new Dog(),
-    new Dog(),
+    new Lad(),
+    new Lad(),
 ];
 
 
