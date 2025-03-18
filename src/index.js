@@ -79,6 +79,80 @@ class Trasher extends Dog {
     }
 }
 
+class Lad extends Dog {
+    constructor() {
+        super('Браток', 2);
+    }
+
+    static getInGameCount() {
+        return this.inGameCount || 0;
+    }
+
+    static setInGameCount(value) {
+        this.inGameCount = value;
+    }
+
+    static getBonus() {
+        const ladCount = this.getInGameCount();
+
+        return ladCount * (ladCount + 1) / 2;
+    }
+
+    modifyDealedDamageToCreature(value, toCard, gameContext, continuation) {
+        continuation(value + Lad.getBonus());
+    }
+
+    modifyTakenDamage(value, fromCard, gameContext, continuation) {
+        continuation(value - Lad.getBonus());
+    }
+
+    doAfterComingIntoPlay(gameContext, continuation) {
+        Lad.setInGameCount(Lad.getInGameCount() + 1);
+        continuation();
+    }
+
+    doBeforeRemoving(continuation) {
+        Lad.setInGameCount(Lad.getInGameCount() - 1);
+        continuation();
+    }
+
+    getDescriptions() {
+        if (Lad.prototype.hasOwnProperty('modifyDealedDamageToCreature') ||
+        Lad.prototype.hasOwnProperty('modifyTakenDamage')) {
+            const desc = 'Чем их больше, тем они сильнее';
+
+            return super.getDescriptions().concat(desc);
+        }
+
+        return super.getDescriptions();
+    }
+}
+
+class Rogue extends Creature {
+    constructor() {
+        super('Изгой', 2);
+    }
+
+    modifyDealedDamageToCreature(value, toCard, gameContext, continuation) {
+        const card = Object.getPrototypeOf(toCard);
+        const propNames = Object.getOwnPropertyNames(card);
+
+        if (card.hasOwnProperty('modifyDealedDamageToCreature')) {
+            delete card['modifyDealedDamageToCreature'];
+        }
+        if (card.hasOwnProperty('modifyDealedDamageToPlayer')) {
+            delete card['modifyDealedDamageToPlayer'];
+        }
+        if (card.hasOwnProperty('modifyTakenDamage')) {
+            delete card['modifyTakenDamage'];
+        }
+
+        gameContext.updateView();
+        continuation(value);
+    }
+}
+
+// Колода Шерифа, нижнего игрока.
 class Gatling
     extends Creature {
     constructor() {
@@ -111,12 +185,12 @@ const seriffStartDeck = [
     new Duck(),
     new Duck(),
     new Duck(),
-    new Gatling(),
+    new Rogue(),
 ];
 const banditStartDeck = [
-    new Trasher(),
-    new Dog(),
-    new Dog(),
+    new Lad(),
+    new Lad(),
+    new Lad(),
 ];
 
 const duck = seriffStartDeck[0];
