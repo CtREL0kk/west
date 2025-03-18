@@ -1,20 +1,16 @@
-import Card from './Card.js';
 import Game from './Game.js';
 import Creature from './Card.js';
 import TaskQueue from './TaskQueue.js';
 import SpeedRate from './SpeedRate.js';
 
-// Отвечает является ли карта уткой.
 function isDuck(card) {
     return card && card.quacks && card.swims;
 }
 
-// Отвечает является ли карта собакой.
 function isDog(card) {
     return card instanceof Dog;
 }
 
-// Дает описание существа по схожести с утками и собаками
 export function getCreatureDescription(card) {
     if (isDuck(card) && isDog(card)) {
         return 'Утка-Собака';
@@ -94,9 +90,6 @@ class Gatling extends Creature{
     }
 
 }
-
-
-
 
 class Rogue extends Creature{
     constructor(name = 'Изгой', power = 2, image = "rogue.jpg") {
@@ -223,11 +216,8 @@ class Nemo extends Creature{
         if (oppositeCard) {
             const stolenPrototype = Object.getPrototypeOf(oppositeCard);
 
-            const oldPrototype = Object.getPrototypeOf(this);
-
             Object.setPrototypeOf(this, stolenPrototype);
 
-            Object.setPrototypeOf(oppositeCard, oldPrototype);
             currentPlayer.table.forEach(card => card.updateView());
             oppositePlayer.table.forEach(card => card.updateView());
 
@@ -244,21 +234,19 @@ class Nemo extends Creature{
 
 const seriffStartDeck = [
     new Duck(),
-    new Brewer(),
+    new Duck(),
+    new Duck(),
+    new Rogue(),
 ];
 const banditStartDeck = [
-    new Dog(),
-    new PseudoDuck(),
-    new Dog(),
+    new Lad(),
+    new Lad(),
+    new Lad(),
 ];
-
-// Создание игры.
 const game = new Game(seriffStartDeck, banditStartDeck);
 
-// Глобальный объект, позволяющий управлять скоростью всех анимаций.
 SpeedRate.set(1);
 
-// Запуск игры.
 game.play(false, (winner) => {
     alert('Победил ' + winner.name);
 });
