@@ -178,7 +178,7 @@ class Lad extends Dog{
 
 class PseudoDuck extends Dog{
     constructor(name="Псевдоутка", power = 3, image = "pseudoduck.jpg") {
-        super(name, power,pseudoduck);
+        super(name, power, image);
     }
     quacks(){
         console.log('quack');
