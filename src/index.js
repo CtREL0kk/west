@@ -175,19 +175,37 @@ class Lad extends Dog{
     }
 }
 
+class Brewer extends Duck{
+    constructor(name = "Пивовар", power = 2) {
+        super(name, power);
+    }
+
+    doBeforeAttack(gameContext, continuation) {
+        const { currentPlayer, oppositePlayer, position, updateView } = gameContext;
+        for (let creature of currentPlayer.table.concat(oppositePlayer.table)) {
+            if (isDuck(creature)) {
+                creature.maxPower += 1;
+
+                creature.currentPower += 2;
+
+                creature.view.signalHeal();
+                creature.updateView();
+            }
+        }
+        super.doBeforeAttack(gameContext, continuation);
+
+    }
+}
 
 const seriffStartDeck = [
     new Duck(),
-    new Duck(),
-    new Duck(),
-    new Rogue(),
+    new Brewer(),
 ];
 const banditStartDeck = [
     new Dog(),
-    new Dog(),
+    new PseudoDuck(),
     new Dog(),
 ];
-
 
 // Создание игры.
 const game = new Game(seriffStartDeck, banditStartDeck);
