@@ -234,7 +234,7 @@ const banditStartDeck = [
 const game = new Game(seriffStartDeck, banditStartDeck);
 
 // Глобальный объект, позволяющий управлять скоростью всех анимаций.
-SpeedRate.set(5);
+SpeedRate.set(0.3);
 
 // Запуск игры.
 game.play(false, (winner) => {
