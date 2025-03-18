@@ -1,6 +1,5 @@
 import Card from './Card.js';
 import Game from './Game.js';
-import TaskQueue from './TaskQueue.js';
 import SpeedRate from './SpeedRate.js';
 
 // Отвечает является ли карта уткой.
@@ -69,7 +68,52 @@ class Trasher extends Dog {
         ];
         return newDescriptions.concat(super.getDescriptions());
     }
+}
 
+class Lad extends Dog{
+    constructor(name = 'Браток', power = 3) {
+        super(name, power);
+        let currentCount = Lad.getInGameCount();
+        Lad.setInGameCount(currentCount + 1);
+    }
+
+    modifyDealedDamageToCreature(value, toCard, gameContext, continuation){
+        continuation(value + Lad.getBonus());
+    }
+
+    modifyTakenDamage(value, fromCard, gameContext, continuation) {
+        continuation(value - Lad.getBonus());
+    }
+
+    getDescriptions(){
+        let newDescriptions = [];
+        if (Lad.prototype.hasOwnProperty('modifyDealedDamageToCreature')){
+            newDescriptions.push('Чем их больше, тем они сильнее');
+        }
+        return newDescriptions.concat(super.getDescriptions());
+    }
+
+    doAfterComingIntoPlay(gameContext, continuation){
+        let currentCount = Lad.getInGameCount();
+        Lad.setInGameCount(currentCount + 1);
+        continuation();
+    }
+
+    doBeforeRemoving(continuation){
+        let currentCount = Lad.getInGameCount();
+        Lad.setInGameCount(currentCount - 1);
+        continuation();
+    }
+    static getInGameCount() {
+        return this.inGameCount || 0;
+    }
+    static setInGameCount(value) {
+        this.inGameCount = value;
+    }
+    static getBonus() {
+        let count = this.getInGameCount();
+        return count * (count + 1) / 2;
+    }
 
 }
 
@@ -83,7 +127,8 @@ const seriffStartDeck = [
 
 // Колода Бандита, верхнего игрока.
 const banditStartDeck = [
-    new Trasher(),
+    new Lad(),
+    new Lad(),
 ];
 
 
