@@ -1,6 +1,7 @@
 import Card from './Card.js';
 import Game from './Game.js';
 import SpeedRate from './SpeedRate.js';
+import TaskQueue from "./TaskQueue.js";
 
 
 // Отвечает является ли карта уткой.
@@ -78,16 +79,44 @@ class Trasher extends Dog {
     }
 }
 
-// Колода Шерифа, нижнего игрока.
+class Gatling
+    extends Creature {
+    constructor() {
+        super('Гатлинг', 6);
+    }
+
+    attack(gameContext, continuation) {
+        const taskQueue = new TaskQueue();
+
+        const {currentPlayer, oppositePlayer, position, updateView} = gameContext;
+
+        taskQueue.push(onDone => this.view.showAttack(onDone));
+        for (let opposite_position = 0; opposite_position < oppositePlayer.table.length; opposite_position++) {
+            const oppositeCard = oppositePlayer.table[opposite_position];
+            if (oppositeCard) {
+                taskQueue.push(onDone => {
+                    this.dealDamageToCreature(this.currentPower, oppositeCard, gameContext, onDone);
+                })
+
+            }
+        }
+
+
+        taskQueue.continueWith(continuation);
+    };
+
+}
+
 const seriffStartDeck = [
     new Duck(),
     new Duck(),
-    new Duck()
+    new Duck(),
+    new Gatling(),
 ];
-
-// Колода Бандита, верхнего игрока.
 const banditStartDeck = [
     new Trasher(),
+    new Dog(),
+    new Dog(),
 ];
 
 const duck = seriffStartDeck[0];
@@ -98,7 +127,7 @@ console.log(Boolean(duck && duck.quacks && duck.swims), isDuck(duck))
 const game = new Game(seriffStartDeck, banditStartDeck);
 
 // Глобальный объект, позволяющий управлять скоростью всех анимаций.
-SpeedRate.set(1);
+SpeedRate.set(5);
 
 // Запуск игры.
 game.play(false, (winner) => {
