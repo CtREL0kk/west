@@ -210,6 +210,38 @@ class Brewer extends Duck{
     }
 }
 
+class Nemo extends Creature{
+    constructor(name = 'Немо', power = 4, image) {
+        super(name, power, image);
+    }
+
+    doBeforeAttack(gameContext, continuation) {
+        const {currentPlayer, oppositePlayer, position, updateView} = gameContext;
+
+        const oppositeCard = oppositePlayer.table[position];
+
+        if (oppositeCard) {
+            const stolenPrototype = Object.getPrototypeOf(oppositeCard);
+
+            const oldPrototype = Object.getPrototypeOf(this);
+
+            Object.setPrototypeOf(this, stolenPrototype);
+
+            Object.setPrototypeOf(oppositeCard, oldPrototype);
+            currentPlayer.table.forEach(card => card.updateView());
+            oppositePlayer.table.forEach(card => card.updateView());
+
+            if (typeof this.doBeforeAttack === 'function') {
+                this.doBeforeAttack(gameContext, continuation);
+            } else {
+                continuation();
+            }
+        } else {
+            continuation();
+        }
+    }
+}
+
 const seriffStartDeck = [
     new Duck(),
     new Brewer(),
