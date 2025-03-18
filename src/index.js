@@ -174,12 +174,11 @@ class Lad extends Dog{
         let count = this.getInGameCount();
         return count * (count + 1) / 2;
     }
-
 }
 
 class PseudoDuck extends Dog{
     constructor(name="Псевдоутка", power = 3, image = "pseudoduck.jpg") {
-        super(name, power,pseudoduck);
+        super(name, power, image);
     }
     quacks(){
         console.log('quack');
@@ -188,19 +187,38 @@ class PseudoDuck extends Dog{
         console.log('float: both;');
     }
 }
-// Колода Шерифа, нижнего игрока.
+
+class Brewer extends Duck{
+    constructor(name = "Пивовар", power = 2) {
+        super(name, power);
+    }
+
+    doBeforeAttack(gameContext, continuation) {
+        const { currentPlayer, oppositePlayer, position, updateView } = gameContext;
+        for (let creature of currentPlayer.table.concat(oppositePlayer.table)) {
+            if (isDuck(creature)) {
+                creature.maxPower += 1;
+
+                creature.currentPower += 2;
+
+                creature.view.signalHeal();
+                creature.updateView();
+            }
+        }
+        super.doBeforeAttack(gameContext, continuation);
+
+    }
+}
+
 const seriffStartDeck = [
     new Duck(),
-    new Duck(),
-    new Duck(),
+    new Brewer(),
 ];
-
-// Колода Бандита, верхнего игрока.
 const banditStartDeck = [
-    new Lad(),
-    new Lad(),
+    new Dog(),
+    new PseudoDuck(),
+    new Dog(),
 ];
-
 
 // Создание игры.
 const game = new Game(seriffStartDeck, banditStartDeck);
