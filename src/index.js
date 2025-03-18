@@ -30,9 +30,20 @@ function getCreatureDescription(card) {
 
 
 // Основа для утки.
-function Duck() {
-    this.quacks = function () { console.log('quack') };
-    this.swims = function () { console.log('float: both;') };
+class Duck extends Card {
+    constructor() {
+        super();
+        this.currentPower = 2;
+        this.maxPower = 2;
+        this.name = 'Мирная утка';
+    }
+    quacks(){
+        console.log('quack');
+    }
+    swims(){
+        console.log('float: both;');
+    }
+
 }
 
 
@@ -46,9 +57,9 @@ class Dog extends Card{
 
 // Колода Шерифа, нижнего игрока.
 const seriffStartDeck = [
-    new Card('Мирный житель', 2),
-    new Card('Мирный житель', 2),
-    new Card('Мирный житель', 2),
+    new Duck(),
+    new Duck(),
+    new Duck(),
 ];
 
 // Колода Бандита, верхнего игрока.
