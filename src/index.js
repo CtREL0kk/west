@@ -1,3 +1,4 @@
+import Card from './Card.js';
 import Game from './Game.js';
 import Creature from './Card.js';
 import TaskQueue from './TaskQueue.js';
@@ -31,8 +32,8 @@ export function getCreatureDescription(card) {
 
 // Основа для утки.
 class Duck extends Creature {
-    constructor(name = 'Мирная утка', power = 2) {
-        super(name, power);
+    constructor(name = 'Мирная утка', power = 2, image = "duck.jpg") {
+        super(name, power, image);
     }
     quacks(){
         console.log('quack');
@@ -46,8 +47,8 @@ class Duck extends Creature {
 
 // Основа для собаки.
 class Dog extends Creature {
-    constructor(name = 'Пес-бандит', power = 3) {
-        super(name, power);
+    constructor(name = 'Пес-бандит', power = 3, image="dog.jpg") {
+        super(name, power, image);
     }
 }
 
@@ -72,8 +73,8 @@ class Trasher extends Dog {
 }
 
 class Gatling extends Creature{
-    constructor(name = 'Гатлинг', power = 6) {
-        super(name, power);
+    constructor(name = 'Гатлинг', power = 6, image="gatling.jpg") {
+        super(name, power, image);
     }
 
     attack(gameContext, continuation) {
@@ -98,8 +99,8 @@ class Gatling extends Creature{
 
 
 class Rogue extends Creature{
-    constructor(name = 'Изгой', power = 2) {
-        super(name, power);
+    constructor(name = 'Изгой', power = 2, image = "rogue.jpg") {
+        super(name, power, image);
     }
 
     doBeforeAttack (gameContext, continuation) {
@@ -130,8 +131,8 @@ class Rogue extends Creature{
 }
 
 class Lad extends Dog{
-    constructor(name = 'Браток', power = 3) {
-        super(name, power);
+    constructor(name = 'Браток', power = 3, image = "lad.jpg") {
+        super(name, power, image);
         let currentCount = Lad.getInGameCount();
         Lad.setInGameCount(currentCount + 1);
     }
@@ -172,6 +173,18 @@ class Lad extends Dog{
     static getBonus() {
         let count = this.getInGameCount();
         return count * (count + 1) / 2;
+    }
+}
+
+class PseudoDuck extends Dog{
+    constructor(name="Псевдоутка", power = 3, image = "pseudoduck.jpg") {
+        super(name, power,pseudoduck);
+    }
+    quacks(){
+        console.log('quack');
+    }
+    swims(){
+        console.log('float: both;');
     }
 }
 
