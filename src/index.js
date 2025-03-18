@@ -95,6 +95,8 @@ class Gatling extends Creature{
 }
 
 
+
+
 class Rogue extends Creature{
     constructor(name = 'Изгой', power = 2) {
         super(name, power);
@@ -126,6 +128,54 @@ class Rogue extends Creature{
     }
 
 }
+
+class Lad extends Dog{
+    constructor(name = 'Браток', power = 3) {
+        super(name, power);
+        let currentCount = Lad.getInGameCount();
+        Lad.setInGameCount(currentCount + 1);
+    }
+
+    modifyDealedDamageToCreature(value, toCard, gameContext, continuation){
+        continuation(value + Lad.getBonus());
+    }
+
+    modifyTakenDamage(value, fromCard, gameContext, continuation) {
+        continuation(value - Lad.getBonus());
+    }
+
+    getDescriptions(){
+        let newDescriptions = [];
+        if (Lad.prototype.hasOwnProperty('modifyDealedDamageToCreature')){
+            newDescriptions.push('Чем их больше, тем они сильнее');
+        }
+        return newDescriptions.concat(super.getDescriptions());
+    }
+
+    doAfterComingIntoPlay(gameContext, continuation){
+        let currentCount = Lad.getInGameCount();
+        Lad.setInGameCount(currentCount + 1);
+        continuation();
+    }
+
+    doBeforeRemoving(continuation){
+        let currentCount = Lad.getInGameCount();
+        Lad.setInGameCount(currentCount - 1);
+        continuation();
+    }
+    static getInGameCount() {
+        return this.inGameCount || 0;
+    }
+    static setInGameCount(value) {
+        this.inGameCount = value;
+    }
+    static getBonus() {
+        let count = this.getInGameCount();
+        return count * (count + 1) / 2;
+    }
+}
+
+
 const seriffStartDeck = [
     new Duck(),
     new Duck(),
