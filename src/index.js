@@ -42,8 +42,8 @@ class Creature extends Card {
 
 // Основа для утки.
 class Duck extends Creature {
-    constructor() {
-        super("Мирная утка", 2)
+    constructor(name = "Мирная утка", power = 2) {
+        super(name, power)
     }
 
     quacks() {
@@ -77,6 +77,34 @@ class Trasher extends Dog {
 
         return super.getDescriptions().concat(desc);
     }
+}
+
+class Brewer extends Duck {
+    constructor() {
+        super('Пивовар', 2);
+    }
+
+    doBeforeAttack(gameContext, continuation) {
+        const taskQueue = new TaskQueue();
+
+        const {currentPlayer, oppositePlayer, position, updateView} = gameContext;
+
+        const allCards = currentPlayer.table.concat(oppositePlayer.table);
+
+        const ducks = allCards.filter(card => isDuck(card));
+
+        ducks.forEach(duck => {
+            taskQueue.push(onDone => {
+                duck.maxPower += 1;
+                duck.currentPower += 2;
+                duck.updateView();
+                duck.view.signalHeal(onDone);
+            });
+        });
+
+        taskQueue.continueWith(continuation);
+    }
+
 }
 
 class Lad extends Dog {
@@ -118,7 +146,7 @@ class Lad extends Dog {
 
     getDescriptions() {
         if (Lad.prototype.hasOwnProperty('modifyDealedDamageToCreature') ||
-        Lad.prototype.hasOwnProperty('modifyTakenDamage')) {
+            Lad.prototype.hasOwnProperty('modifyTakenDamage')) {
             const desc = 'Чем их больше, тем они сильнее';
 
             return super.getDescriptions().concat(desc);
@@ -187,22 +215,19 @@ class Gatling
 
 const seriffStartDeck = [
     new Duck(),
-    new Duck(),
-    new Duck(),
+    new Brewer(),
     new Rogue(),
     new Rogue(),
     new Rogue(),
     new Rogue(),
-    new Rogue(),
-];
-const banditStartDeck = [
-    new Lad(),
-    new Lad(),
-    new Lad(),
 ];
 
-const duck = seriffStartDeck[0];
-console.log(Boolean(duck && duck.quacks && duck.swims), isDuck(duck))
+const banditStartDeck = [
+    new Dog(),
+    new Dog(),
+    new Dog(),
+    new Dog(),
+];
 
 
 // Создание игры.
