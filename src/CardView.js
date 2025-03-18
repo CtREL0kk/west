@@ -23,6 +23,8 @@ const CardView = function() {
         this.name.innerText = name;
         if (image) {
             this.image.setAttribute('src', `images/${image}`);
+            this.image.style.width = '100%';
+            this.image.style.height = 'auto'
         } else {
             this.image = null;
         }
