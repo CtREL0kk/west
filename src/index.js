@@ -135,15 +135,19 @@ class Rogue extends Creature {
 
     modifyDealedDamageToCreature(value, toCard, gameContext, continuation) {
         const card = Object.getPrototypeOf(toCard);
-        const propNames = Object.getOwnPropertyNames(card);
+        const propNames = Object.getOwnPropertyNames(this);
 
         if (card.hasOwnProperty('modifyDealedDamageToCreature')) {
+            this.modifyDealedDamageToCreature = card.modifyDealedDamageToCreature;
             delete card['modifyDealedDamageToCreature'];
+
         }
         if (card.hasOwnProperty('modifyDealedDamageToPlayer')) {
+            this.modifyDealedDamageToCreature = card.modifyDealedDamageToPlayer;
             delete card['modifyDealedDamageToPlayer'];
         }
         if (card.hasOwnProperty('modifyTakenDamage')) {
+            this.modifyTakenDamage = card.modifyTakenDamage
             delete card['modifyTakenDamage'];
         }
 
@@ -185,6 +189,10 @@ const seriffStartDeck = [
     new Duck(),
     new Duck(),
     new Duck(),
+    new Rogue(),
+    new Rogue(),
+    new Rogue(),
+    new Rogue(),
     new Rogue(),
 ];
 const banditStartDeck = [
