@@ -1,4 +1,4 @@
-const SpeedRate = function() {
+const SpeedRate = function () {
     let speedRate = 1;
 
     function set(value) {

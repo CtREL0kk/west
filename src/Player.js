@@ -67,7 +67,7 @@ const Player = function () {
     Player.prototype.applyCards = function (continuation) {
         const taskQueue = new TaskQueue();
 
-        for(let position = 0; position < this.table.length; position++) {
+        for (let position = 0; position < this.table.length; position++) {
             taskQueue.push(onDone => {
                 const card = this.table[position];
                 if (card) {
@@ -89,7 +89,7 @@ const Player = function () {
     Player.prototype.removeDead = function (continuation) {
         const taskQueue = new TaskQueue();
 
-        for(let position = 0; position < this.table.length; position++) {
+        for (let position = 0; position < this.table.length; position++) {
             taskQueue.push(onDone => {
                 const card = this.table[position];
                 if (!card || card.currentPower > 0) {
@@ -107,7 +107,7 @@ const Player = function () {
     Player.prototype.compactTable = function (continuation) {
         const taskQueue = new TaskQueue();
 
-        for(let position = 0; position < this.table.length; position++) {
+        for (let position = 0; position < this.table.length; position++) {
             taskQueue.push(onDone => {
                 if (this.table[position]) {
                     onDone();

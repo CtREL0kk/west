@@ -16,8 +16,7 @@ function runNextTask(taskQueue) {
                 });
             });
         }, 0);
-    }
-    else {
+    } else {
         runNextTask(taskQueue);
     }
 }
@@ -47,5 +46,5 @@ export default class TaskQueue {
 
     continueWith(action) {
         this.push(action, null, 0);
-    }
+    };
 }

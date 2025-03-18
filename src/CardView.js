@@ -1,7 +1,7 @@
 import SpeedRate from './SpeedRate.js';
 import TaskQueue from './TaskQueue.js';
 
-const CardView = function() {
+const CardView = function () {
     function CardView() {
         this.inBottomRow = false;
         this.card = createFromTemplate();
@@ -13,10 +13,10 @@ const CardView = function() {
         this.maxPower = this.card.querySelector('.cardMaxPower');
     }
 
-    CardView.prototype.putInDeck = function(deck, inBottomRow, position) {
+    CardView.prototype.putInDeck = function (deck, inBottomRow, position) {
         deck.appendChild(this.card);
         this.inBottomRow = inBottomRow;
-        this.card.style['left'] = `${3*position}px`;
+        this.card.style['left'] = `${3 * position}px`;
     };
 
     CardView.prototype.updateData = function ({name, descriptions, image, currentPower, maxPower}) {
@@ -31,10 +31,10 @@ const CardView = function() {
         this.maxPower.innerText = maxPower;
     };
 
-    CardView.prototype.flipFront = function(continuation) {
+    CardView.prototype.flipFront = function (continuation) {
         const taskQueue = new TaskQueue();
 
-        const timeInSec = 0.5/SpeedRate.get();
+        const timeInSec = 0.5 / SpeedRate.get();
         taskQueue.push(
             () => {
                 this.card.classList.remove('flipped');
@@ -43,16 +43,16 @@ const CardView = function() {
             () => {
                 this.card.style.transitionDuration = null;
             },
-            timeInSec*1000
+            timeInSec * 1000
         );
 
         taskQueue.continueWith(continuation);
     };
 
-    CardView.prototype.flipBack = function(continuation) {
+    CardView.prototype.flipBack = function (continuation) {
         const taskQueue = new TaskQueue();
 
-        const timeInSec = 0.5/SpeedRate.get();
+        const timeInSec = 0.5 / SpeedRate.get();
         taskQueue.push(
             () => {
                 this.card.classList.add('flipped');
@@ -61,30 +61,30 @@ const CardView = function() {
             () => {
                 this.card.style.transitionDuration = null;
             },
-            timeInSec*1000
+            timeInSec * 1000
         );
 
         taskQueue.continueWith(continuation);
     };
 
-    CardView.prototype.signalHeal = function(continuation) {
+    CardView.prototype.signalHeal = function (continuation) {
         signal(this.signal, SpeedRate.get(), 'heal', continuation);
     };
 
-    CardView.prototype.signalDamage = function(continuation) {
+    CardView.prototype.signalDamage = function (continuation) {
         signal(this.signal, SpeedRate.get(), 'damage', continuation);
     };
 
-    CardView.prototype.signalAbility = function(continuation) {
+    CardView.prototype.signalAbility = function (continuation) {
         signal(this.signal, SpeedRate.get(), 'ability', continuation);
     };
 
-    CardView.prototype.showAttack = function(continuation) {
+    CardView.prototype.showAttack = function (continuation) {
         const taskQueue = new TaskQueue();
 
         const attackClass = this.inBottomRow ? 'attackUp' : 'attackDown';
 
-        const timeInSec = 0.3/SpeedRate.get();
+        const timeInSec = 0.3 / SpeedRate.get();
         taskQueue.push(
             () => {
                 this.card.classList.add(attackClass);
@@ -94,13 +94,13 @@ const CardView = function() {
                 this.card.classList.remove(attackClass);
                 this.card.style.animationDuration = null;
             },
-            timeInSec*1000
+            timeInSec * 1000
         );
 
         taskQueue.continueWith(continuation);
     };
 
-    CardView.prototype.moveTo = function(target, continuation) {
+    CardView.prototype.moveTo = function (target, continuation) {
         const taskQueue = new TaskQueue();
 
         const targetOffset = getOffset(target);
@@ -108,7 +108,7 @@ const CardView = function() {
         const dx = targetOffset.left - cardOffset.left;
         const dy = targetOffset.top - cardOffset.top;
 
-        const timeInSec = 0.5/SpeedRate.get();
+        const timeInSec = 0.5 / SpeedRate.get();
         taskQueue.push(
             () => {
                 this.card.style['transform'] = `translate(${dx}px, ${dy}px)`;
@@ -121,16 +121,16 @@ const CardView = function() {
                 this.card.style['transform'] = '';
                 this.card.style['transitionDuration'] = null;
             },
-            timeInSec*1000
+            timeInSec * 1000
         );
 
         taskQueue.continueWith(continuation);
     };
 
-    CardView.prototype.remove = function(continuation) {
+    CardView.prototype.remove = function (continuation) {
         const taskQueue = new TaskQueue();
 
-        const timeInSec = 0.3/SpeedRate.get();
+        const timeInSec = 0.3 / SpeedRate.get();
         taskQueue.push(
             () => {
                 this.card.classList.add('fadeOut')
@@ -140,7 +140,7 @@ const CardView = function() {
                 this.card.parentNode.removeChild(this.card);
                 this.card.style.animationDuration = null;
             },
-            timeInSec*1000
+            timeInSec * 1000
         );
 
         taskQueue.continueWith(continuation);
@@ -154,7 +154,7 @@ const CardView = function() {
     function signal(signalElement, speedRate, signalName, continuation) {
         const taskQueue = new TaskQueue();
 
-        const timeInSec = 0.5/speedRate;
+        const timeInSec = 0.5 / speedRate;
         taskQueue.push(
             () => {
                 signalElement.classList.add(signalName);
@@ -166,7 +166,7 @@ const CardView = function() {
                 signalElement.classList.remove(signalName);
                 signalElement.style.animationDuration = null;
             },
-            timeInSec*1000
+            timeInSec * 1000
         );
 
         taskQueue.continueWith(continuation);
