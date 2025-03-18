@@ -69,21 +69,73 @@ class Trasher extends Dog {
         ];
         return newDescriptions.concat(super.getDescriptions());
     }
+}
 
+class Gatling extends Creature{
+    constructor(name = 'Гатлинг', power = 6) {
+        super(name, power);
+    }
+
+    attack(gameContext, continuation) {
+        const taskQueue = new TaskQueue();
+
+        const {currentPlayer, oppositePlayer, position, updateView} = gameContext;
+        for (let i = 0; i < oppositePlayer.table.length; i++) {
+            taskQueue.push(onDone => this.view.showAttack(onDone));
+            taskQueue.push(onDone => {
+                const oppositeCard = oppositePlayer.table[i];
+                this.dealDamageToCreature(this.currentPower, oppositeCard, gameContext, onDone);
+            });
+        }
+
+        taskQueue.continueWith(continuation);
+
+    }
 
 }
 
 
-// Колода Шерифа, нижнего игрока.
+class Rogue extends Creature{
+    constructor(name = 'Изгой', power = 2) {
+        super(name, power);
+    }
+
+    doBeforeAttack (gameContext, continuation) {
+        const { currentPlayer, oppositePlayer, position, updateView } = gameContext;
+
+        const oppositeCard = oppositePlayer.table[position];
+
+        if (oppositeCard) {
+            const prototype = Object.getPrototypeOf(oppositeCard);
+
+            const abilitiesToSteal = [
+                'modifyDealedDamageToCreature',
+                'modifyDealedDamageToPlayer',
+                'modifyTakenDamage'
+            ];
+            for (const ability of abilitiesToSteal) {
+                if (prototype.hasOwnProperty(ability)) {
+                    this[ability] = prototype[ability];
+                    delete prototype[ability];
+                }
+            }
+
+            oppositePlayer.table.forEach(card => card.updateView());
+        }
+        super.doBeforeAttack(gameContext, continuation);
+    }
+
+}
 const seriffStartDeck = [
     new Duck(),
     new Duck(),
     new Duck(),
+    new Rogue(),
 ];
-
-// Колода Бандита, верхнего игрока.
 const banditStartDeck = [
-    new Trasher(),
+    new Dog(),
+    new Dog(),
+    new Dog(),
 ];
 
 
