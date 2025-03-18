@@ -31,11 +31,8 @@ function getCreatureDescription(card) {
 
 // Основа для утки.
 class Duck extends Card {
-    constructor() {
-        super();
-        this.currentPower = 2;
-        this.maxPower = 2;
-        this.name = 'Мирная утка';
+    constructor(name = 'Мирная утка', power = 2) {
+        super(name, power);
     }
     quacks(){
         console.log('quack');
