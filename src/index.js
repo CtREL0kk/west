@@ -51,6 +51,28 @@ class Dog extends Card{
     }
 }
 
+class Trasher extends Dog {
+    constructor(name="Громила", power = 5) {
+        super(name, power);
+    }
+
+    modifyTakenDamage(value, fromCard, gameContext, continuation) {
+        if (value > 0){
+            this.view.signalAbility(() => {
+                continuation(value - 1);
+            });
+        }
+    }
+
+    getDescriptions(){
+        let newDescriptions = ['Если Громилу атакуют, то он получает на 1 меньше урона.',
+        ];
+        return newDescriptions.concat(super.getDescriptions());
+    }
+
+
+}
+
 
 // Колода Шерифа, нижнего игрока.
 const seriffStartDeck = [
@@ -61,7 +83,7 @@ const seriffStartDeck = [
 
 // Колода Бандита, верхнего игрока.
 const banditStartDeck = [
-    new Dog(),
+    new Trasher(),
 ];
 
 
