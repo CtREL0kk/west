@@ -1,7 +1,7 @@
 import Player from './Player.js';
 import PlayerView from './PlayerView.js';
 
-const Game = function() {
+const Game = function () {
     function Game(bottomPlayerDeck, topPlayerDeck) {
         this.bottomPlayerStartDeck = bottomPlayerDeck;
         this.topPlayerStartDeck = topPlayerDeck;
@@ -82,7 +82,7 @@ const Game = function() {
             currentPlayer: this.currentPlayer,
             oppositePlayer: this.oppositePlayer,
             position: position,
-            updateView : () => this.updateView(),
+            updateView: () => this.updateView(),
         }
     };
 

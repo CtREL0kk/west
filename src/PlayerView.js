@@ -9,7 +9,7 @@ const PlayerView = function () {
         this.currentPower = playerRow.querySelector('.playerCurrentPower');
         this.maxPower = playerRow.querySelector('.playerMaxPower');
         this.deck = playerTable.querySelector('.deckPlace');
-        this.table =  playerTable.querySelectorAll('.cardPlace');
+        this.table = playerTable.querySelectorAll('.cardPlace');
     }
 
     PlayerView.prototype.updateData = function ({image, currentPower, maxPower}) {
@@ -22,22 +22,22 @@ const PlayerView = function () {
         this.maxPower.innerText = maxPower;
     };
 
-    PlayerView.prototype.signalHeal = function(continuation) {
+    PlayerView.prototype.signalHeal = function (continuation) {
         signal(this.signal, SpeedRate.get(), 'heal', continuation);
     };
 
-    PlayerView.prototype.signalDamage = function(continuation) {
+    PlayerView.prototype.signalDamage = function (continuation) {
         signal(this.signal, SpeedRate.get(), 'damage', continuation);
     };
 
-    PlayerView.prototype.signalTurnStart = function(continuation) {
-        signal(this.signal, SpeedRate.get()/2, 'turnStart', continuation);
+    PlayerView.prototype.signalTurnStart = function (continuation) {
+        signal(this.signal, SpeedRate.get() / 2, 'turnStart', continuation);
     };
 
     function signal(signalElement, speedRate, signalName, continuation) {
         const taskQueue = new TaskQueue();
 
-        const timeInSec = 0.5/speedRate;
+        const timeInSec = 0.5 / speedRate;
         taskQueue.push(
             () => {
                 signalElement.classList.add(signalName);
@@ -49,7 +49,7 @@ const PlayerView = function () {
                 signalElement.classList.remove(signalName);
                 signalElement.style.animationDuration = null;
             },
-            timeInSec*1000
+            timeInSec * 1000
         );
 
         taskQueue.continueWith(continuation);

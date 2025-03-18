@@ -5,7 +5,7 @@ import SpeedRate from './SpeedRate.js';
 
 // Отвечает является ли карта уткой.
 function isDuck(card) {
-    return card && card.quacks && card.swims;
+    return card && card.quacks && card.swims && true;
 }
 
 // Отвечает является ли карта собакой.
@@ -15,6 +15,7 @@ function isDog(card) {
 
 // Дает описание существа по схожести с утками и собаками
 function getCreatureDescription(card) {
+    console.log(card)
     if (isDuck(card) && isDog(card)) {
         return 'Утка-Собака';
     }
@@ -27,9 +28,19 @@ function getCreatureDescription(card) {
     return 'Существо';
 }
 
+class Creature extends Card {
+    constructor(name, maxPower, image) {
+        super(name, maxPower, image);
+    }
+
+    getDescriptions() {
+        return [getCreatureDescription(this), ...super.getDescriptions()]
+    }
+}
+
 
 // Основа для утки.
-class Duck extends Card {
+class Duck extends Creature {
     constructor() {
         super("Мирная утка", 2)
     }
@@ -45,7 +56,7 @@ class Duck extends Card {
 
 
 // Основа для собаки.
-class Dog extends Card {
+class Dog extends Creature {
     constructor() {
         super('Бандит', 3);
     }
@@ -63,6 +74,9 @@ const seriffStartDeck = [
 const banditStartDeck = [
     new Dog(),
 ];
+
+const duck = seriffStartDeck[0];
+console.log(Boolean(duck && duck.quacks && duck.swims), isDuck(duck))
 
 
 // Создание игры.
